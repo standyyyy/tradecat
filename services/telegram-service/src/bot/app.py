@@ -5484,8 +5484,37 @@ async def handle_keyboard_message(update: Update, context: ContextTypes.DEFAULT_
                 
             elif action == "help":
                 await help_command(update, context)
+            
+            elif action == "coin_query":
+                # 币种查询入口
+                from common.symbols import get_configured_symbols
+                symbols = get_configured_symbols()
+                coins = [s.replace("USDT", "") for s in symbols] if symbols else ["BTC", "ETH", "SOL"]
+                coins_text = "\n".join(coins)
+                text = (
+                    "🔍 *币种查询*\n\n"
+                    f"```\n{coins_text}\n```\n"
+                    f"📊 可查询币种 ({len(coins)} 个)\n"
+                    "💡 使用方法: 发送 `币种名!` 触发查询\n"
+                    "例如: `BTC!` 或 `ETH!`"
+                )
+                keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🏠 返回主菜单", callback_data="main_menu")]])
+                await update.message.reply_text(text, reply_markup=keyboard, parse_mode='Markdown')
+            
+            elif action == "start_coin_analysis":
+                # AI 分析入口
+                try:
+                    from bot.ai_integration import get_ai_handler, AI_SERVICE_AVAILABLE
+                    if not AI_SERVICE_AVAILABLE:
+                        await update.message.reply_text("🤖 AI 分析模块未安装")
+                        return
+                    ai_handler = get_ai_handler(symbols_provider=lambda: user_handler.get_active_symbols() if user_handler else None)
+                    await ai_handler.start_ai_analysis(update, context)
+                except Exception as e:
+                    logger.error(f"AI分析入口失败: {e}")
+                    await update.message.reply_text(f"❌ AI分析失败: {e}")
                 
-            elif action in {"aggregated_alerts", "coin_search", "start_coin_analysis"}:
+            elif action in {"aggregated_alerts", "coin_search"}:
                 await update.message.reply_text("🚧 功能开发中，敬请期待！")
                 return
 
