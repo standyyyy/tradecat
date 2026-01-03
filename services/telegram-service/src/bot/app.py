@@ -1085,13 +1085,13 @@ class UserRequestHandler:
         """获取常驻回复键盘"""
         keyboard = [
             [
-                KeyboardButton("🏠 主菜单"),
                 KeyboardButton("📊 数据面板"),
-                KeyboardButton("ℹ️ 帮助")
-            ],
-            [
                 KeyboardButton("🔍 币种查询"),
                 KeyboardButton("🤖 AI分析"),
+            ],
+            [
+                KeyboardButton("🏠 主菜单"),
+                KeyboardButton("ℹ️ 帮助"),
             ]
         ]
         return ReplyKeyboardMarkup(
