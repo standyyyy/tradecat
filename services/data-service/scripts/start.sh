@@ -99,7 +99,24 @@ COMPONENTS=(backfill metrics ws)
 
 # 启动命令
 declare -A START_CMDS=(
-    [backfill]="python3 -m collectors.backfill --all --lookback 7"
+    [backfill]="python3 -c \"
+import time, logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+logger = logging.getLogger('backfill.patrol')
+from collectors.backfill import DataBackfiller
+bf = DataBackfiller(lookback_days=3)
+while True:
+    try:
+        logger.info('开始缺口巡检...')
+        result = bf.run_all()
+        klines = result.get('klines', {})
+        metrics = result.get('metrics', {})
+        logger.info('巡检完成: K线填充 %d 条, Metrics填充 %d 条, 5分钟后再次检查',
+                    klines.get('filled', 0), metrics.get('filled', 0))
+    except Exception as e:
+        logger.error('巡检异常: %s', e, exc_info=True)
+    time.sleep(300)
+\""
     [metrics]="python3 -c \"
 import time, logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -204,24 +221,86 @@ status_component() {
     fi
 }
 
-# ==================== 主命令 ====================
-cmd_start() {
+# ==================== 守护进程 ====================
+daemon_loop() {
+    log "守护进程启动 (检查间隔: ${CHECK_INTERVAL}s)"
+    while true; do
+        for name in "${COMPONENTS[@]}"; do
+            local pid=$(get_pid "$name")
+            if ! is_running "$pid"; then
+                log "检测到 $name 未运行，重启..."
+                start_component "$name" >/dev/null
+            fi
+        done
+        sleep "$CHECK_INTERVAL"
+    done
+}
+
+cmd_daemon() {
     init_dirs
-    echo "=== 启动全部服务 ==="
+    
+    # 检查是否已有守护进程
+    if [ -f "$DAEMON_PID" ]; then
+        local pid=$(cat "$DAEMON_PID")
+        if is_running "$pid"; then
+            echo "守护进程已运行 (PID: $pid)"
+            return 0
+        fi
+    fi
+    
+    # 先启动所有服务
+    echo "=== 启动守护模式 ==="
     for name in "${COMPONENTS[@]}"; do
         start_component "$name"
     done
+    
+    # 后台启动守护循环
+    daemon_loop &
+    echo $! > "$DAEMON_PID"
+    log "守护进程已启动 (PID: $!)"
+    echo "守护进程已启动 (PID: $!)"
 }
 
 cmd_stop() {
     echo "=== 停止全部服务 ==="
+    
+    # 先停守护进程
+    if [ -f "$DAEMON_PID" ]; then
+        local dpid=$(cat "$DAEMON_PID")
+        if is_running "$dpid"; then
+            kill "$dpid" 2>/dev/null
+            log "STOP daemon (PID: $dpid)"
+            echo "  daemon: 已停止"
+        fi
+        rm -f "$DAEMON_PID"
+    fi
+    
     for name in "${COMPONENTS[@]}"; do
         stop_component "$name"
     done
 }
 
+# ==================== 主命令 ====================
+cmd_start() {
+    # 默认就是守护模式
+    cmd_daemon
+}
+
 cmd_status() {
     echo "=== 服务状态 ==="
+    
+    # 守护进程状态
+    if [ -f "$DAEMON_PID" ]; then
+        local dpid=$(cat "$DAEMON_PID")
+        if is_running "$dpid"; then
+            echo "  ✓ daemon: 运行中 (PID: $dpid)"
+        else
+            echo "  ✗ daemon: 未运行"
+        fi
+    else
+        echo "  ✗ daemon: 未运行"
+    fi
+    
     for name in "${COMPONENTS[@]}"; do
         status_component "$name"
     done

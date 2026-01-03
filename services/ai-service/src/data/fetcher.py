@@ -11,7 +11,7 @@ import os
 import sys
 import sqlite3
 from datetime import datetime, timezone
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional, Set
 
 from src.config import INDICATOR_DB, PROJECT_ROOT
 
@@ -28,6 +28,19 @@ DB_PASS = os.getenv("TIMESCALE_PASSWORD", "postgres")
 DB_NAME = os.getenv("TIMESCALE_DB", "market_data")
 
 ALL_INTERVALS = ["1m", "5m", "15m", "1h", "4h", "1d", "1w"]
+
+# AI 指标表配置
+def _get_ai_tables_config() -> Optional[Set[str]]:
+    """从环境变量获取 AI 指标表配置"""
+    enabled = os.getenv("AI_INDICATOR_TABLES", "").strip()
+    disabled = os.getenv("AI_INDICATOR_TABLES_DISABLED", "").strip()
+    
+    enabled_set = {t.strip() for t in enabled.split(",") if t.strip()} if enabled else None
+    disabled_set = {t.strip() for t in disabled.split(",") if t.strip()} if disabled else set()
+    
+    return enabled_set, disabled_set
+
+AI_TABLES_ENABLED, AI_TABLES_DISABLED = _get_ai_tables_config()
 
 
 def _get_pg_conn():
@@ -168,7 +181,7 @@ def fetch_metrics(symbol: str, limit: int = 50) -> List[Dict[str, Any]]:
 
 
 def fetch_indicators_full(symbol: str) -> Dict[str, Any]:
-    """从 SQLite 获取全部指标数据（全量）"""
+    """从 SQLite 获取指标数据（每个周期只取最新一条，按配置过滤表）"""
     db_path = INDICATOR_DB
     indicators: Dict[str, Any] = {}
 
@@ -187,6 +200,12 @@ def fetch_indicators_full(symbol: str) -> Dict[str, Any]:
     tables = [r[0] for r in cur.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
     
     for tbl in tables:
+        # 按配置过滤表
+        if AI_TABLES_ENABLED and tbl not in AI_TABLES_ENABLED:
+            continue
+        if tbl in AI_TABLES_DISABLED:
+            continue
+            
         try:
             cols = [d[1] for d in cur.execute(f"PRAGMA table_info('{tbl}')").fetchall()]
             if not cols:
@@ -197,11 +216,18 @@ def fetch_indicators_full(symbol: str) -> Dict[str, Any]:
                 if cand in cols:
                     sym_col = cand
                     break
-                    
             if sym_col is None:
                 continue
-                
-            rows = cur.execute(f"SELECT * FROM '{tbl}' WHERE `{sym_col}`=?", (symbol,)).fetchall()
+            
+            # 有周期字段：每个周期取最新一条
+            if "周期" in cols:
+                sql = f"SELECT * FROM '{tbl}' WHERE `{sym_col}`=? GROUP BY `周期` HAVING `数据时间`=MAX(`数据时间`)"
+                rows = cur.execute(sql, (symbol,)).fetchall()
+            else:
+                # 无周期字段：只取最新一条
+                sql = f"SELECT * FROM '{tbl}' WHERE `{sym_col}`=? ORDER BY `数据时间` DESC LIMIT 1"
+                rows = cur.execute(sql, (symbol,)).fetchall()
+            
             if rows:
                 indicators[tbl] = [dict(zip(cols, r)) for r in rows]
         except Exception as e:
