@@ -176,6 +176,16 @@
 
 ## 📊 数据规模
 
+**🔗 历史数据下载**: [HuggingFace 数据集](https://huggingface.co/datasets/123olp/binance-futures-ohlcv-2018-2026)
+
+| 数据集 | 说明 | 大小 |
+|:---|:---|:---|
+| `candles_1m.bin.zst` | K线数据 (2018-至今, 3.73亿条) | ~15 GB |
+| `futures_metrics_5m.bin.zst` | 期货指标 (2021-至今, 9457万条) | ~800 MB |
+
+<details>
+<summary><strong>📋 数据详情与导入步骤</strong></summary>
+
 ### 数据概览
 
 <table>
@@ -231,19 +241,7 @@
 | 期货指标 | 每 5 分钟 | < 30秒 |
 | 技术指标 | 每分钟轮询 | < 3分钟 |
 
-### 📥 历史数据下载
-
-我们在 HuggingFace 上提供了完整的历史数据集，可直接下载导入使用：
-
-**🔗 数据集地址**: [https://huggingface.co/datasets/123olp/binance-futures-ohlcv-2018-2026](https://huggingface.co/datasets/123olp/binance-futures-ohlcv-2018-2026)
-
-| 数据集 | 说明 | 大小 |
-|:---|:---|:---|
-| `candles_1m.bin.zst` | K线数据 (2018-至今) | ~15 GB |
-| `futures_metrics_5m.bin.zst` | 期货指标 (2021-至今) | ~800 MB |
-| `schema.sql.zst` | 表结构 | < 1 MB |
-
-**导入步骤**:
+### 导入步骤
 
 ```bash
 # 1. 下载数据文件
@@ -263,13 +261,13 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 
 > 💡 导入后即可使用 trading-service 计算指标，无需从头采集历史数据。
 
+</details>
+
 ---
 
 ## 📈 技术指标
 
-### 指标分类 (38个)
-
-<details open>
+<details>
 <summary><strong>🔥 趋势指标 (8个)</strong></summary>
 
 | 指标 | 说明 | 参数 |
@@ -285,7 +283,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 
 </details>
 
-<details open>
+<details>
 <summary><strong>📊 动量指标 (6个)</strong></summary>
 
 | 指标 | 说明 | 参数 |
@@ -299,7 +297,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 
 </details>
 
-<details open>
+<details>
 <summary><strong>📉 波动指标 (4个)</strong></summary>
 
 | 指标 | 说明 | 参数 |
@@ -311,7 +309,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 
 </details>
 
-<details open>
+<details>
 <summary><strong>📦 成交量指标 (6个)</strong></summary>
 
 | 指标 | 说明 | 用途 |
@@ -325,7 +323,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 
 </details>
 
-<details open>
+<details>
 <summary><strong>🕯️ K线形态 (61+种)</strong></summary>
 
 **蜡烛形态 (TA-Lib, 61种)**
@@ -348,7 +346,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 
 </details>
 
-<details open>
+<details>
 <summary><strong>📡 期货指标 (8个)</strong></summary>
 
 | 指标 | 说明 | 信号含义 |
@@ -694,7 +692,7 @@ tradecat/
 
 ### 服务管理
 
-<details open>
+<details>
 <summary><strong>统一管理（推荐）</strong></summary>
 
 ```bash
@@ -789,7 +787,7 @@ htop -p $(pgrep -d',' -f "simple_scheduler|crypto_trading")
 
 ### 数据库操作
 
-<details open>
+<details>
 <summary><strong>TimescaleDB 查询</strong></summary>
 
 ```bash
@@ -835,7 +833,7 @@ LIMIT 10;
 
 ### 数据备份
 
-<details open>
+<details>
 <summary><strong>导出 TimescaleDB</strong></summary>
 
 ```bash
