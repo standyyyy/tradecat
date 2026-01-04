@@ -533,8 +533,6 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 
 </details>
 
-</details>
-
 ### 📈 技术指标
 
 <details>
