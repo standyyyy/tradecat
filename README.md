@@ -60,7 +60,8 @@
 
 ---
 
-## 💰 救救孩子
+<details open>
+<summary><strong>点击展开👉 💰 救救孩子</strong></summary>
 
 救救孩子，感谢了，好人一生平安🙏🙏🙏
 
@@ -71,6 +72,8 @@
 - **BNB Smart Chain (BEP20)**: `0xa396923a71ee7D9480b346a17dDeEb2c0C287BBC`
 - **Bitcoin**: `bc1plslluj3zq3snpnnczplu7ywf37h89dyudqua04pz4txwh8z5z5vsre7nlm`
 - **Sui**: `0xb720c98a48c77f2d49d375932b2867e793029e6337f1562522640e4f84203d2e`
+
+</details>
 
 ---
 
@@ -991,11 +994,14 @@ PGPASSWORD=postgres psql -h localhost -p 5433 -U postgres -c "\l"
 
 ---
 
-## 📞 联系方式
+<details open>
+<summary><strong>点击展开👉 📞 联系方式</strong></summary>
 
 - **Telegram 频道**: [@tradecat_ai_channel](https://t.me/tradecat_ai_channel)
 - **Telegram 交流群**: [@glue_coding](https://t.me/glue_coding)
 - **Twitter/X**: [@123olp](https://x.com/123olp)
+
+</details>
 
 ---
 
