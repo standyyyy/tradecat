@@ -15,9 +15,9 @@
 ---
 
 <p>
-  <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/TimescaleDB-99GB-orange?style=for-the-badge&logo=postgresql&logoColor=white" alt="TimescaleDB">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/TimescaleDB-时序数据库-orange?style=flat-square&logo=postgresql&logoColor=white" alt="TimescaleDB">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="License">
 </p>
 
 <p>
