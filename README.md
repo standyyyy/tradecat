@@ -221,7 +221,7 @@
 | `futures_metrics_5m.bin.zst` | 期货指标 (2021-至今, 9457万条) | ~800 MB |
 
 <details>
-<summary><strong>📋 数据详情与导入步骤</strong></summary>
+<summary><strong>📋 点击展开👉 数据详情与导入步骤</strong></summary>
 
 ### 数据概览
 
@@ -305,7 +305,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 ## 📈 技术指标
 
 <details>
-<summary><strong>🔥 趋势指标 (8个)</strong></summary>
+<summary><strong>🔥 点击展开👉 趋势指标 (8个)</strong></summary>
 
 | 指标 | 说明 | 参数 |
 |:---|:---|:---|
@@ -321,7 +321,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 </details>
 
 <details>
-<summary><strong>📊 动量指标 (6个)</strong></summary>
+<summary><strong>📊 点击展开👉 动量指标 (6个)</strong></summary>
 
 | 指标 | 说明 | 参数 |
 |:---|:---|:---|
@@ -335,7 +335,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 </details>
 
 <details>
-<summary><strong>📉 波动指标 (4个)</strong></summary>
+<summary><strong>📉 点击展开👉 波动指标 (4个)</strong></summary>
 
 | 指标 | 说明 | 参数 |
 |:---|:---|:---|
@@ -347,7 +347,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 </details>
 
 <details>
-<summary><strong>📦 成交量指标 (6个)</strong></summary>
+<summary><strong>📦 点击展开👉 成交量指标 (6个)</strong></summary>
 
 | 指标 | 说明 | 用途 |
 |:---|:---|:---|
@@ -361,7 +361,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 </details>
 
 <details>
-<summary><strong>🕯️ K线形态 (61+种)</strong></summary>
+<summary><strong>🕯️ 点击展开👉 K线形态 (61+种)</strong></summary>
 
 **蜡烛形态 (TA-Lib, 61种)**
 
@@ -384,7 +384,7 @@ zstd -d futures_metrics_5m.bin.zst -c | psql -h localhost -p 5433 -U postgres -d
 </details>
 
 <details>
-<summary><strong>📡 期货指标 (8个)</strong></summary>
+<summary><strong>📡 点击展开👉 期货指标 (8个)</strong></summary>
 
 | 指标 | 说明 | 信号含义 |
 |:---|:---|:---|
@@ -491,7 +491,7 @@ K线维度:
 > 把下面的提示词复制到 **Claude / ChatGPT / Cursor / Kiro**，AI 会自动执行安装，零人工介入
 
 <details>
-<summary><strong>📋 点击展开安装提示词</strong></summary>
+<summary><strong>📋 点击展开👉 安装提示词</strong></summary>
 
 ```
 按照 https://github.com/tukuaiai/tradecat/blob/main/README.md 的说明帮我安装 TradeCat
@@ -555,7 +555,7 @@ cd ~/.projects/tradecat
 ---
 
 <details>
-<summary><strong>📖 手动安装步骤（点击展开）</strong></summary>
+<summary><strong>📖 点击展开👉 手动安装步骤</strong></summary>
 
 ### 环境要求
 
@@ -707,7 +707,7 @@ tradecat/
 ### 服务管理
 
 <details>
-<summary><strong>统一管理（推荐）</strong></summary>
+<summary><strong>点击展开👉 统一管理（推荐）</strong></summary>
 
 ```bash
 # 启动 + 守护（自动重启挂掉的服务，30秒检查一次）
@@ -728,7 +728,7 @@ tradecat/
 </details>
 
 <details>
-<summary><strong>单服务管理</strong></summary>
+<summary><strong>点击展开👉 单服务管理</strong></summary>
 
 ```bash
 # data-service
@@ -744,7 +744,7 @@ cd services/data-service
 </details>
 
 <details>
-<summary><strong>初始化</strong></summary>
+<summary><strong>点击展开👉 初始化</strong></summary>
 
 ```bash
 # 初始化全部服务
@@ -757,7 +757,7 @@ cd services/data-service
 </details>
 
 <details>
-<summary><strong>验证与检查</strong></summary>
+<summary><strong>点击展开👉 验证与检查</strong></summary>
 
 ```bash
 ./scripts/verify.sh
@@ -766,7 +766,7 @@ cd services/data-service
 </details>
 
 <details>
-<summary><strong>查看日志</strong></summary>
+<summary><strong>点击展开👉 查看日志</strong></summary>
 
 ```bash
 # data-service 日志
@@ -787,7 +787,7 @@ tail -f daemon.log
 </details>
 
 <details>
-<summary><strong>进程监控</strong></summary>
+<summary><strong>点击展开👉 进程监控</strong></summary>
 
 ```bash
 # 查看所有相关进程
@@ -802,7 +802,7 @@ htop -p $(pgrep -d',' -f "simple_scheduler|crypto_trading")
 ### 数据库操作
 
 <details>
-<summary><strong>TimescaleDB 查询</strong></summary>
+<summary><strong>点击展开👉 TimescaleDB 查询</strong></summary>
 
 ```bash
 # 连接数据库
@@ -827,7 +827,7 @@ ORDER BY bucket_ts DESC LIMIT 10;
 </details>
 
 <details>
-<summary><strong>SQLite 查询</strong></summary>
+<summary><strong>点击展开👉 SQLite 查询</strong></summary>
 
 ```bash
 # 连接数据库
@@ -848,7 +848,7 @@ LIMIT 10;
 ### 数据备份
 
 <details>
-<summary><strong>导出 TimescaleDB</strong></summary>
+<summary><strong>点击展开👉 导出 TimescaleDB</strong></summary>
 
 ```bash
 # 运行导出脚本 (后台执行)
@@ -868,7 +868,7 @@ ls -lh backups/timescaledb/
 </details>
 
 <details>
-<summary><strong>恢复数据</strong></summary>
+<summary><strong>点击展开👉 恢复数据</strong></summary>
 
 ```bash
 cd backups/timescaledb
@@ -890,7 +890,7 @@ zstd -d futures_metrics_*.bin.zst -c | psql -h localhost -p 5433 -U postgres -d 
 ### 常见问题
 
 <details>
-<summary><strong>Q: TA-Lib 安装失败？</strong></summary>
+<summary><strong>点击展开👉 Q: TA-Lib 安装失败？</strong></summary>
 
 ```bash
 # 确保先安装系统库
@@ -911,7 +911,7 @@ pip install TA-Lib
 </details>
 
 <details>
-<summary><strong>Q: K线形态显示"无形态"？</strong></summary>
+<summary><strong>点击展开👉 Q: K线形态显示"无形态"？</strong></summary>
 
 ```bash
 # 检查 TA-Lib 是否安装
@@ -929,7 +929,7 @@ cd services/trading-service
 </details>
 
 <details>
-<summary><strong>Q: 数据库连接失败？</strong></summary>
+<summary><strong>点击展开👉 Q: 数据库连接失败？</strong></summary>
 
 ```bash
 # 检查 PostgreSQL 是否运行
